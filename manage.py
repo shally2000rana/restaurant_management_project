@@ -3,54 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial=scale=1.0">
-  <title>404 - Page Not Found</title>
-  <style>
-   body{
-    maegin:0;
-    padding:0;
-    background-color: #f8f9fa;
-    font-family: 'Seqoe UI', Tahoma,Geneva,Verdana,sans-serif;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    text-align:center;
-    color:#333;
-   } 
-   .container{
-    max-width:500px;
-    padding:20px;
-   }
-   h1{
-    font-size:2rem;
-    margin-bottom:20px;
-   }
-   p{
-    font-size:1.1rem;
-    margin-bottom:30px;
-    color:#666;
-   }
-   a{
-    text-decoration:none;
-    background-color:#ff4b5c;
-    color:white;
-    padding:12px 25ox;
-    border-radius:5px;
-    font-size:1rem;
-    transition:background-color 0.3s;
+  <title>Homepage</title>
+</head>
+<body style="margin:0; font-family: Arial, sans-serif;background-color:#333;">
+  <--Header-->
+  <header style="background-color:#4CAF50; padding: 20px; text-align:center; color:white;">
+    <h1 style="margin:0; font-size:2.5rem;">Welcome to MySite</h1>
+    <p style="margin:5px 0;fomt-size:1.2rem;">A simple and beautiful homepage</p> 
+  </header>
 
-   }
-   a.hover{
-    background-color: #d63b4a;
-   }
-  </style>
-<head>
-<body>
-  <div class="container">
-    <h1>404</h1>
-    <h2>Oops! Page Not Found</h2>
-    <p>It seems the page you are looking for does not exist or has been moved.</p>
-    <a href="/">Go back home</a>
-  </div>    
+  <--Main Content-->
+  <main style="padding:40px 20px;text-align:center; ">
+    <h2 style="color: #4CAF50;font-size: 2rem;">Explore Our Content</h2>
+    <p style="max-width:600px; margin: auto; font-size: 1.1rem; line-height:1.6;">
+    This is a simple homepage with a touch of color and better layout. the inline styles make it quick to set up and easy to customize.
+    </p>
+    <a href="#"
+      style="display: inline-block; margin-top:20px; padding:12px 25px; background-color: #4CAF50; color:white; text-decoration:none; border-radius:5px; font-size:1rem;">
+      Get Started
+    </a>
+  </main>
+
+  <--Footer-->
+  <footer style="background-color:#333; color:white; text-align: center; padding:15px 0; matgin-top: 40px;">
+    &copy; 2025 MySite. All rights reserved.
+  </footer>     
 </body>
 </html>     

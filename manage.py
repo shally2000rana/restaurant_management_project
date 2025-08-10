@@ -3,23 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial=scale=1.0">
-  <title>Homepage</title>
+  <title>404 - Page Not Found</title>
+  <style>
+   body{
+    maegin:0;
+    padding:0;
+    background-color: #f8f9fa;
+    font-family: 'Seqoe UI', Tahoma,Geneva,Verdana,sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    text-align:center;
+    color:#333;
+   } 
+   .container{
+    max-width:500px;
+    padding:20px;
+   }
+   h1{
+    font-size:2rem;
+    margin-bottom:20px;
+   }
+   p{
+    font-size:1.1rem;
+    margin-bottom:30px;
+    color:#666;
+   }
+   a{
+    text-decoration:none;
+    background-color:#ff4b5c;
+    color:white;
+    padding:12px 25ox;
+    border-radius:5px;
+    font-size:1rem;
+    transition:background-color 0.3s;
 
-  <!--Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net//npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light text-dark">
-
-  <!--Hero section-->
-  <div class="container text-center my-5">
-   <h1 class="fw-bold display-4">Welcome to MySite</h1>
-   <p class="lead">A clean and modern Homepage built with bootstrap</p>
-   <a href="#" class="btn btn-primary btn-lg">Get Strarted</a>
-  </div>
-
-  <!--Footer-->
-  <footer class="text-center py-4 bg-dark text-light">
-    &copy: 2025 MySite. All rights reserved.
-  </footer>
+   }
+   a.hover{
+    background-color: #d63b4a;
+   }
+  </style>
+<head>
+<body>
+  <div class="container">
+    <h1>404</h1>
+    <h2>Oops! Page Not Found</h2>
+    <p>It seems the page you are looking for does not exist or has been moved.</p>
+    <a href="/">Go back home</a>
+  </div>    
 </body>
 </html>     

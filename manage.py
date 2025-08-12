@@ -1,3 +1,20 @@
+from django.db import models
+class RestaurantInfo(models.Model):
+     name=models.CharField(max_length=255)
+     phone_number=models.CharField(max_length=20)
+
+     def __str__(self):
+        retrun self.name
+from django.shortcuts import render
+from .models import RestaurantInfo
+
+def home(request):
+    restaurant=RestaurantInfo.objects.first()
+    context={
+        'restaurant_name':restaurant.name if restaurant else 'Our Restaurant',
+        'restaurant_phone':restaurant.phone_number if restaurant else 'not available'
+           }
+           retrun render(request,'home.html',context)
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,10 +70,15 @@
    
 </head>
 <body>
+  <header>
+  {{restaurant_name}}
+  </header>
+
  <div class="container">
   <h1>welcome to {{restaurant_name}}!</h1>
   <p>we are happy to serve you the best food in town.
   Enjoy our delicious menu and cozy atmosphere</p>
+  <div class="phone">{{restaurant_phone}}</div>
  </div>
  <footer>
     &copy; 2025{{restaurant_name}}.All rights reserved.

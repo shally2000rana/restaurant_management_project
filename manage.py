@@ -1,49 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>A bout us- My Restaurant</title>
+<meta charset="UTF-8">
+<Meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us</title>
   <style>
     body{
         font-family:Arial,sans-serif;
-        background-color:#f7f7f7;
+        background-color:#f9f9f9;
         margin:0;
         padding:0;
     }
-    header{
-        background-color:#333;
-        color:white;
-        margin:0;
-        padding:0;
-    }
-    main{
-        max-width:80px;
-        margin:auto;
-        background:white;
-        padding:2em;
-        box-shadow:0px 2px 8px rgba(0,0,0,.1);
-    }
-    img{
-        width:100px;
+    .container{
+        width:80%;
+        max-width:800px;
+        background:#fff;
+        margin:50px auto;
+        padding:20px;
         border-radius:8px;
-        margin-bottom: 1em;
+        box-shadow:0px 2px 8px rgba(0,0,0,0.1);
     }
     h1{
         text-align:center;
+        color:#333;
     }
-  </style>
-  <header>
-  <h2> My Restaurant</h2>
-  <main>
-    <img src="{% static 'images/testaurant.jpg' %}" alt="Restaurant Image">
-    <h1>About us</h1>
-    <p>welcome to my Restaurant, where we serve delicious and freshly prepared meals with love.
-      our mission is to create a cozy atmosphere where friends and families can enjoy unforgetable dining experiences.</p>
-    <p>we pride ourselves on using the freshest ingredient ,sourced locally whenever possible,to bring you flavours that make every bite special.</p>
- </main>
- </body>
- </html>
+    .contact-info{
+        margin:20px 0;
+    }
+    .contact-info{
+        margin:8px 0;
+        font-size:16px;
+        
+    }
+    .contact-form label{
+        display:block;
+        margin: 10px 0 5px;
+    }
+    .contact-form input,
+    .contact-form textarea{
+        width:100%;
+        padding:8px;
+        border: 1px solid #ccc;
+        border-radius:4px;
+    }
+    .contact-form button{
+        margin-top:15px;
+        padding:10px 20px;
+        background:#4CAF50;
+        color:white;
+        border:none;
+        border-radius:4px;
+        cursor:pointer;
+    }
+    .contact-form  button:hover{
+        background:#45a049;
+    }
+</head>
+<body>
+<div class="container">
+  <h1>Contact Us</h1>
+  
+  <div class="contact-info">
+     <p><strong>Address:</strong>123 main street, your city, india</p>
+     <p><strong>Phone:</strong>+9198765432</p>
+     <p><strong>Email:</strong> contact@example.com</p>
+  </div>
 
-<nav>
-  <a href="{% url 'home' %}">Home</a>
-  <a href="{% url'about' %}">About</a>
-</nav>  
+  <hr>
+  <form class="contact-form">
+     <label for="name">your name</label>
+     <input type="text" id="name" placeholder="enter your name" reqiured>
+
+     <label for="email">your email</label>
+     <input type="email" id="email" placeholder="enter your email" reqired>
+
+     <label> for ="message">your message</label>
+     <textarea id="message" rows="5" placeholder="type your message here "required></textarea>
+
+     <button type="submit">send message</button>
+  </form>
+</div>
+</body>
+</html>
+
+ 

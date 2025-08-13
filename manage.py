@@ -3,25 +3,32 @@
 <head>
  <meta charset="UTF-8">
  <Meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page title</title>
+  <title>HomePage</title>
   <style>
     body{
-        font-family:sans-serif;
-        display:flex;
-        min-height:100vh;
-        flex-direction:column;
+        font-family:Arial,sans-serif;
+        background-color:#f4f4f4:
+        color:#333;
+        margin:0;
+        padding:20px;
+        line-height:1.6;
     }
-    .content{
-       flex:1;
-       padding-bottom:50px;
+    .container{
+       max-width:960px;
+       margin:auto;
+       background:#fff;
+       padding:20px;
+       border-radius:8px;
+       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    footer{
-       background-color:#333;
-       color:#fff;
+    h1{
+       color:#007BFF;
        text-align:center;
-       padding:1rem;
-       width:100%;
-       margin-top:auto;    
+       margin-bottom:20px;    
+    }
+    p{
+        font-size:1.1rem;
+        text-align:center;
     }
  
  </style>
@@ -30,18 +37,10 @@
 <body>
   
 
- <div class="content">
-  <h1>this is the main area</h1>
-  <p>your page content will be displayed here,above the footer.</p>
+ <div class="container">
+  <h1>weicome to our website</h1>
+  <p>this is the homepage template.it's a great starting point for your project.</p>
  </div>
-
- <footer>
-   <p>&copy; <span id="current-year"></span> Your company name. All rights reserved.
- </footer>
-
- <script>
-   document.getElementById('current-year').textContent=newDate().getFullYear():
- </script> 
 </body>
 </html>
 

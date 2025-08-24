@@ -1,50 +1,38 @@
-<!DOCTYPE html>
-<html>
-<head>
-   <title>Restaurant Homepage</title>
-   <style>
-    
-     body{
-        font-family:Arial, sans-serif;
-        padding: 0;
-        margin:0;
-        min-height:100vh;
-        display:flex;
-        fex-direction:column;
-     }
-     main{
-        flex: 1;
-        padding:20px;
-     }
-    
-  
-     footer{
-        padding:15px 0;
-        background-color:#333;
-        color:#fff;
-        text-align:center;
-        margin-top:auto;
-     }
-   </style>
-</head>
-<body>
-    <main>
-       {% block title %} Home- Restaurant{%end block %}
-       {% block content %}
-    </main>
-    <h1>welcome to our restaurant </h1>
-    <p>Delicious food, made with love.</p>
-   <footer>
-    <div class="search-container">
-      <form method="GET" action="">
-         <input type="text" name="q" placeholder="Search menu items...">
-         <button type="submit">Search</button>
-      </form>
-    </div>
-    </footer>
-  {% endblock %}
-</body>
-</html>
+from django.db import models
+class Feedback(models.Model):
+    comment=models.TextField()
+    created_at=models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Feedback {self.id} -{self.created_at.strftime('%Y-%m-%d %H:%M)}"
+
+from django import forms
+from .models import Feedback
+
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model=Feedback
+        fields=['comment']
+        widgets={
+            'comment':forms.Textarea(attrs={
+                'placeholder': 'write your feedback here...',
+                'rows':4,
+                'cols':40
+            }),
+        }
+
+from django.shortcuts import render,
+from .forms import FeedbackForm
+
+def feedback_view(request):
+    if request.method =="POST":
+        form =FeedbackForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('feedback')
+    else:
+        form=FeedbackForm()
+    return render(request, "feedback.html", {"form": form})        
 
 
  

@@ -1,44 +1,35 @@
-!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Restaurant{% endblock %}</title>
-    <style>
-      body{
-        font-family:Arial, sans-serif;
-        margin:0;
-        padding:0;
-        min-height:100vh;
-        display:fkex;
-        felx-direction:column;
-      }
-      main{
-        background-color:#333;
-        color:#fff;
-        text-align: center;
-        padding: 15px 0;
-        margin-top: auto;
-      }
-      .footer-hours{
-        font-size:14px;
-        margin-top:5px;
-        color:#add;
-      }
-    </style>
+{% extends "base.html" %}
+{% block title %}Contact Us{% endblock %}
 
-</head>
-<body>
-    <main>
-      {% block content %}{% endblock %}
-    </main>
+{% block content %}
+  <h2>Contact Us</h2>
+  <form id="contactForm">
+  <p>
+    <label for="name">Name:</label><br>
+    <input type="name" id="name" name="name" requied>
+  <p>
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" required>
+  </p>
+  <p>
+    <label for="message">Message:</label><br>
+    <textarea id="message" name="message" rows="4" cols="40"></textarea>
+  </p>
+  <button type="submit">Send</button>
+  </form>
 
-    <footer>
-    <p>|| Our Restaurant - All Rights Reserved &copy; 2025</p>
-    <p class="footer-hours">Mon-Fri: 11am-9pm, Sat-Sun: 10am-10pm</p>
-    </footer>
+  <script>
+    document.getElementById("contactForm").addEventListener("submit", function(event){
+         let name=document.getElementById("name").value.trim();
+         let email=document.getElementById("email").value.trim();
 
-</body>
-</html>   
+         if(name=== ""|| email===""){
+            alert("Please fill in both Name and Email.");
+            event.preventDefault();
+         }
+    });
+  </script>
+{% endblock %}
 
 
  

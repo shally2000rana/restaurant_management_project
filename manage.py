@@ -1,20 +1,13 @@
-from django.contrib import admin
-from .models import Menu, Order, OrderItem
-@admin.register(Menu)
-class MenuAdmin(admin.ModelAdmin):
-    list_display=('id', 'name','price')
-    search_fields=('name')
-    list_filter=('price')
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-class OrderItemInLine(admin.TabularInLine):
-    model=OrderItem
-    extra=1
-
-@amin.register(Order)
-class OrderAdmin(admin.ModelAdmin):
-    list_display=('id', 'customer', 'status', 'total_amount', 'created_at')
-    list_filter=('status', 'created_at')
-    search_fields=('customer__username')
-    inlines=[OrderItemInLine]    
+@api_view(['GET'])
+def menu_api(request):
+    menu=[
+        {"id": 1, "name":"Margherita Pizza", "description": "Classic pizza with cheese and tomato", "price":250},
+        {"id": 2, "name":"Veg burger ","description": "veg patty with frsh lettuce and mayo", "price":150},
+        {"id": 3, "name":"Pasta alffredo", "description": "Creamy white sauce pasta with herbs", "price":300}
+    ]
+    return Response(menu)
 
  

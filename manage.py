@@ -1,13 +1,26 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+#settings.py
+RESTAURANT_NAME="Tasty Bites"
+#views.py
+from django.conf import settings
+from django.shortcuts import render
+from django.urls import path
+from . import views
 
-@api_view(['GET'])
-def menu_api(request):
-    menu=[
-        {"id": 1, "name":"Margherita Pizza", "description": "Classic pizza with cheese and tomato", "price":250},
-        {"id": 2, "name":"Veg burger ","description": "veg patty with frsh lettuce and mayo", "price":150},
-        {"id": 3, "name":"Pasta alffredo", "description": "Creamy white sauce pasta with herbs", "price":300}
-    ]
-    return Response(menu)
+def home(request):
+    restaurant_name=settings.RESTAURANT_NAME
+    return render(request,"home.html", {"rrestaurant_name": restaurant_name})
 
+urlpatterns=[
+    path('', views.home, name='home').
+]
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{restaurant_name}}</title>
+</head>
+<body>
+    <h1>Welcome to {{restaurant_name}}</h1>
+</body>
+</html>
  

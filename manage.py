@@ -1,17 +1,34 @@
 from django.db import models
 from django.shortcuts import render
-from .models import MenuItem
+from .models import Contact
+from .forms import ContactForm
+from django.urls import path
+from .import views
 
 
-class MenuItem(models.Model):
-    name=models.CharField(max_length)
-    description=models.TextField(blank=True, null=True)
-    price=models.DecimalField(max_digits=6, decimal_places=2)
+class Contact(models.Model):
+    name=models.CharField(max_length=100)
+    email=models.EmailField()
 
     def __str__(self):
         return self.name
 
-def menu_view(request):
-    items=MenuItem.objects.all()
-    return render(request, 'menu.html', {'items':items})
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model=Contact
+        fields=['name', 'email']
+
+def home(request):
+    if request.method=='POST'
+       form=ContactForm(request.POST)
+       if form.is_valid():
+       form.save()
+       return redirect('home')
+    else:
+        form=ContactForm()
+    return render(request, 'home.html', {'form': form})
+
+urlpatterns=[
+    path('', views.home, name='home')
+]
   

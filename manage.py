@@ -1,34 +1,37 @@
 from django.db import models
-from django.shortcuts import render
-from .models import Contact
-from .forms import ContactForm
-from django.urls import path
-from .import views
-
-
-class Contact(models.Model):
+class Restaurant(models.Model):
     name=models.CharField(max_length=100)
-    email=models.EmailField()
+    address=models.TextField()
 
     def __str__(self):
         return self.name
+from django.contrib import admin
+from .models import Restaurant
+admin.site.register(Restaurant)
+python manage.py makemigrations
+python manage.py migrate
 
-class ContactForm(forms.ModelForm):
-    class Meta:
-        model=Contact
-        fields=['name', 'email']
+from django.shortcuts import render
+from .models import Restaurant
 
-def home(request):
-    if request.method=='POST'
-       form=ContactForm(request.POST)
-       if form.is_valid():
-       form.save()
-       return redirect('home')
-    else:
-        form=ContactForm()
-    return render(request, 'home.html', {'form': form})
+def homepage(request):
+    restaurant =Restaurant.objects.first()
+    return render(request,"homepage.html",{"restaurant":restaurant})
+from django.urls import path
+from . import pathurlpatterns=[
+    path("",views.homepage,name="homepage"),
 
-urlpatterns=[
-    path('', views.home, name='home')
 ]
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Restaurant Homepage</title>
+</head>
+<body>
+    <h1>Welcome to {{restaurant.name}}</h1>
+    <p><strong>Address:</strong>{{restaurant.address}}</p>
+</body>
+</html>
+
+
   

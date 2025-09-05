@@ -1,31 +1,33 @@
 from django.db import models
 
-class ContactSubmission(models.Model):
+class MenuItem(models.Model):
     name=models.CharField(max_length=100)
-    email=models.EmailField()
-    submitted_at=models.DateTimeField(auto_now+add=True)
+    description=models.TextField()
+    price=models.DecimalField(max_digits=6, decimal_places=2)
+    image=models.ImageField(upload_to='menu_images/',blank=True, null=True)
 
     def __str__(self):
-        return f"{self.name} ({self.email})"
+        return self.name
 
-from django import forms
-from .models import ContactSubmission
+import os
+MEDIA_URL='/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR, 'media')
 
-class ContactForm(forms.ModelForm):
-    class Meta:
-        model=ContactSubmission
-        fields=['name','email']
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path
+from .import views
 
-from django.shortcuts import render, redirect
-from .forms import ContactForm
+urlpatterns=[
+    path('menu/',view.menu_view, name='menu'),
+]
+if settings.DEBUG:
+    urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-def contact_view(request):
-    if request.method=='POST':
-        form=ContactForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('thank_you')
-        else:
-            form=ContactForm()
-        return render(request, 'contact.html',{'form':form})
+from django.shortcuts import render
+from .models import MenuItem
+
+def menu_view(request):
+    items=MenuItem.objects.all()
+    return render(request, 'menu.html',{'items':items})
 

@@ -1,60 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Menu Search</title>
-   <style>
-      body{
-      font-family:Arial, sans-serif;
-      padding:20px;
-      background:#f9f9f9;
-     }
-      h1{
-      text-align:center;
-     }
-      #searchBar{
-       width:100%;
-       padding:10px;
-       margin:20px 0;
-       font-size:16px;
-       border:1px solid #ccc;
-       border-radius:8px;
-      }
-      ul{
-      padding:10px;
-      margin:5px 0;
-      background:#fff;
-      border-radius:6px;
-      box-shadow:0 2px 4px rgba(0,0,0,0.1);
-       }
-    </style>
-</head>
-<body>
-   <h1>Our Menu</h1>
-   <input type="text" id="searchBar" placeholder="Search menu items ...">
+#settings.py
+EMAIL_BACKEND='django.core.mail.backends.console.EmailBckend'
+DEFAULT)FROM_EMAIL='restaurant@example.com'
+#contact/forms.py
+from django import forms
+class ContactForm(forms.Form):
+    name=forms.CharField(max_length=100,label="Your Name")
 
-   <ul id="menuList">
-     <li>Pizza Margherita</li>
-     <li>Veggie Burger</li>
-     <li>Caesar Salad</li>
-     <li>Pasta Alfredo</li>
-     <li>Grilled Sandwich</li>
-     <li>Tomato Soup</li>
-     <li>French Fries</li>
-    </ul>
-    <script>
-      const searchBar=document.getElementById('searchBar');
-      const menuList=document.getElementById('menuList');
-      const items=menuList.getElementById('li');
+    email=forms.EmailField(label="Your Email")
+    message=forms.CharField(widget=forms.Textarea, label="Your Message")
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect
+from django.conf import settings
+from .forms import ContactForm
+def contact_view(request):
+    if request.method=="POST":
+        form=ContactForm(request.POST)
+        if form.is_valid():
+            name=form.cleaned_data['name']
+            email=form.cleaned_data['email']
+            message=form.cleaned_data['message']
 
-      searchBar.addEventListener('keyup',function(){
-        const filter=searchBar.value.toLowerCase();
-        for(let i=0; i< items.length; i++){
-           const text=items[i].textContent.toLowerCase();
-           items[i].style.display=text.includes(filter) ? '' : 'none';
-        }
-      });
-    </script>
-</body>
-</html>
+            #send email
+            send_mail(
+                subject=f"New Contact Form Submision from {name}",
+                message=f"Message from {name} ({email}):\n\n{message}",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                receipent_list=['restaurant@example.com'],
+            )
+        return redirect('success')
+    else:
+        form=ContactForm()
+    return render(request, "contact/contact.html", {"form":form})

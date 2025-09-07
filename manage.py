@@ -1,33 +1,53 @@
-#settings.py
-EMAIL_BACKEND='django.core.mail.backends.console.EmailBckend'
-DEFAULT)FROM_EMAIL='restaurant@example.com'
-#contact/forms.py
-from django import forms
-class ContactForm(forms.Form):
-    name=forms.CharField(max_length=100,label="Your Name")
+pip install Pillow
+#menu/models.py
+from django.db import models
+class MenuItem(models.Model):
+    name=models.CharField(max_length=100)
+    description=models.TextField()
+    price-models.DecimalField(max_length=6, decimal_places=2)
+    image=models.ImageField(upload_to='menu_images/', blank=True, null=True)
 
-    email=forms.EmailField(label="Your Email")
-    message=forms.CharField(widget=forms.Textarea, label="Your Message")
-from django.core.mail import send_mail
-from django.shortcuts import render, redirect
+    def __str__(self):
+        return self.name
+
+import os
+MEDIA_URL='/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR,'media')
+
 from django.conf import settings
-from .forms import ContactForm
-def contact_view(request):
-    if request.method=="POST":
-        form=ContactForm(request.POST)
-        if form.is_valid():
-            name=form.cleaned_data['name']
-            email=form.cleaned_data['email']
-            message=form.cleaned_data['message']
+from django.conf.urls.static import static
+urlpattens=[
 
-            #send email
-            send_mail(
-                subject=f"New Contact Form Submision from {name}",
-                message=f"Message from {name} ({email}):\n\n{message}",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                receipent_list=['restaurant@example.com'],
-            )
-        return redirect('success')
-    else:
-        form=ContactForm()
-    return render(request, "contact/contact.html", {"form":form})
+]
+if settings.DEBUG:
+    urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+python manage.py makemigrations
+python manage.py migrate
+
+from django.contrib import admin
+from .models import MenuItem
+@admin.register(MenuItem)
+class MenuItemAdmin(admin.ModelAdmin):
+    list_display=('name','price')
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Menu</title>
+</head>
+<body> 
+   <h1>Our Menu</h1>
+   <ul>
+    {% for item in menu_items %}
+     <li>
+      {% for item in menu_items %}
+       <img src="{{item.image.url}}" alt="{{item.name}}" style="width:150px; height:auto; border-radius:8px;">
+      {% endif %}
+      <h2>{{item.name}}</h2>
+      <p>{{item.description}}</p>
+      <p><strong>{{item.price}}</strong></p>
+     </li>
+    {% endfor %}
+   </ul>
+</body>
+</html>

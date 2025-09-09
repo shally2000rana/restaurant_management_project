@@ -1,29 +1,30 @@
-#views.py
-from django.shortcuts import redirect
+#models.py
+from django.db import models
 
-def add_to_cart(request, product_id):
-    cart=request.session.get('cart',{})
-    cart[product_id]=cart.get(product_id, 0) +1
-    request.session['cart']=cart
-    return redirect('homepage')
+class Restaurant(model.Model):
+    name=models.CharField(max_length=200)
+    address=models.TextField()
+    phone_number=models.CharField(max_length=15, blank=True, null=True)
+    opening_hours=models.TextField(blank=True, null=True)
 
-#utils.py
-def get_cart_item_count(request):
-    cart=request.session.get('cart',{})
-    return sum(cart.values())
+    def __str__(self):
+        return self.name
+
+python manage.py makemigrations
+python manage.py migrate
 
 #views.py
 from django.shortcuts import render
-from .utils import get_cart_item_count
+from .models import Restaurant
 
-def CartItem(models.Model):
-    user=models.ForeignKey(User, on_delete=models.CASCADE)
-    product=models.CharField(max_length=100)
-    quantity=models.PositiveIntegerField(default=1)
-
-#views.py
-@login_required
 def homepage(request):
-    cart_count=CartItem.objects.filter(user=request.user).aggregate(total=models.Sum('quantity'))['total'] or 0
-    return render(request, 'homepage.html', {'cart_count': cart_count})
+    restaurant=Restaurant.objects.first()
+    return render(request,'homepage.html',{'restaurant': restaurant})
+
+<!--templates/homepage.html-->
+<h1>Welcome to {{restaurant.address }}</h1>
+
+<p><strong>Address:</strong>{{ restaurant.address }}</p>
+<p><strong>Phone:</strong>{{restaurant.phone_number}}</p>
+<p><strong>Opening Hours:</strong>{{restaurant.opening_hours}}</p>
 

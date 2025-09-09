@@ -4,14 +4,28 @@ from django.db import models
 class Restaurant(model.Model):
     name=models.CharField(max_length=200)
     address=models.TextField()
-    phone_number=models.CharField(max_length=15, blank=True, null=True)
-    opening_hours=models.TextField(blank=True, null=True)
+    phone_number=models.CharField(max_length=15)
+    opening_hours=models.TextField()
+    logo=models.ImageField(upload_to='logos/', blank=True, null=True)
 
     def __str__(self):
         return self.name
 
-python manage.py makemigrations
-python manage.py migrate
+import os
+MEDIA_URL='/media/'
+MEDIA_ROOT=os.path.join(BASE_DIR, 'media')
+
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path
+from .import views
+
+urlpatterns=[
+    path('',views.homepage, name='homepage'),
+]
+
+if settings.DEBUG:
+    urlpatterns+=static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 #views.py
 from django.shortcuts import render

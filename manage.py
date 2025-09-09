@@ -1,47 +1,37 @@
-from django.db import models
-class Restaurant(models.Model):
-    name=models.CharField(max_length=200)
-    address=models.TextField()
-    phone=models.CharField(max_length=20)
+#forms.py
+from django import forms
 
-    def __str__(self):
-        return self.name
-
-python manage.py makemigrations
-python manage.py migrate
-
+class ContactForm(forms.Form):
+    name=forms.CharField(max_length=100, required=False)
+    email=forms.EmailField(required=True, error_message={
+        'required': 'Please enter your email address.',
+        'invalid': 'Enter a valid email address.',
+    })
+    message=forms.CharField(
+        widget=forms.Textarea,
+        required=True,
+        error_message={'required': 'Please enter a message.'}
+    )
 from django.shortcuts import render
-from .models import Restaurant
+from .forms import ContactForm
 
-def homepage(request):
-    Restaurant=Restaurant.objects.first()
-    return render(request, "restaurant/homepage.html",{"restaurant": restaurant})
-<!DOCTYPE html>
-<html>
-<head>
-   <title>{{restaurant.name}}</title>
-   <style>
-    body{font-family:Arial, sans-serif; padding:20px;}
-    .address-box{
-        margin:20px 0;
-        padding: 15px;
-        border: 1px solid #ddd;
-        border-radius:8px;
-        background:#f9f9f9;
-        max_width:400px;
-    }
-   
-   </style>
-</head>
-<body>
-   <h1>Welcome to {{restaurant.name}}</h1>
-   <p>{{restaurant.address}}</p>
-   <p>{{restaurant.phone}}</p>
+def contact_view(request):
+    if request.method=='POST':
+        form=ContactForm(request.POST)
+        if form.is_valid():
+            email=form.cleaned_data['email']
+            message=form.cleaned_data['message']
+            name=form.cleaned_data.get('name','Anonumous')
+            print(f"Message from {name} ({email}): {message}")
 
-   <div class="address-box">
-     <h2>Our Address</h2>
-     <p>{{restaurant.address}}</p>
-    </div>
-   
-</body>
-</html>
+            return render(request,'contact_success.html')
+        else:
+            form=ContactForm()
+        return render(request, 'contact.html', {'form': form})
+
+<h2>Contact us</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p  }}
+  <button type="submit">Send</button>
+</form>

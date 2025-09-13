@@ -1,26 +1,41 @@
+from django.shortcuts import render
+
+def faq_view(request):
+    faqs=[
+        {"question":"what are your opening hours?", "answer":"we are open from 9AM to 10PM every day."},
+        {"question":"Do you offer home delivery?", "answer":"Yes, we offer free home delivery within 5 km."},
+        {"question":"How can i contact you?", "answer":"You can call us at (123) 456-7890 or email info@restaurant.com."},
+    ]
+
+    return render(request,"faq.html", {"faqs": faqs})
+
 <!DOCTYPE html>
 <html>
 <head>
-   <title>Home Page</title>
+    <title>FAQs</title>
 </head>
-<body> 
-   <h1>Welcome to Our Restaurant</h1>
+<body>
+    <h1>Frequently Asked Questions</h1>
 
-   <!-- Current Date and Time Section-->
-   <section>
-      <h2>Current Date and Time</h2>
-      <p>{% now "l, d F Y - h:i A" %}</p>
-    </section>
+    <ul>
+      {% for item in faqs %}
+        <li>
+          <strong>Q: {{item.question }}</strong>
+          A: {{item.answer}}
+        </li>
+      {% endfor %}
+    </ul>
+
+    <p><a href="{% url 'home' %}">Back to home </a></p>
 </body>
 </html>
 
-from django import template
-from django.utils import timezone
+from django.urls import path
+from . import views
 
-register=template.Library()
-
-@register.simple_tag
-def current_datetime(format_string="%A, %d %B %Y - %I:%M:%p"):
-    now=timezone.now()
-    return now,strftime(format_string)
+urlpatterns=[
+    path('',views.home_view, name='home'),
+    path('faq/', views.faq.view, name='faq'),
+]
+<p><a href="{% url 'faq' %}">Visit our FAQ page</a></p>
 

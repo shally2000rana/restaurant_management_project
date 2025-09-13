@@ -1,14 +1,26 @@
-from django.shortcuts import render
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Home Page</title>
+</head>
+<body> 
+   <h1>Welcome to Our Restaurant</h1>
 
-def about(request):
-    context={
-        "history": "Our restaurant was founded in 1995 with the vision of serving authentic, locally sourced meals.",
-        "mission": "To provide our customers with high-quality, freshly prepared food in a welcoming atmosphere.",
-        "values":[
-            "Fresh & Local Ingredients",
-            "Excellence Customer Service",
-            "Sustainability & Community Support"
-        ]
-    }
-    return render(request, "about.html", context)
+   <!-- Current Date and Time Section-->
+   <section>
+      <h2>Current Date and Time</h2>
+      <p>{% now "l, d F Y - h:i A" %}</p>
+    </section>
+</body>
+</html>
+
+from django import template
+from django.utils import timezone
+
+register=template.Library()
+
+@register.simple_tag
+def current_datetime(format_string="%A, %d %B %Y - %I:%M:%p"):
+    now=timezone.now()
+    return now,strftime(format_string)
 

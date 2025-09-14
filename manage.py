@@ -1,37 +1,4 @@
-<!--base.html-->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-   <meta charset="UTF-8">
-   <title>{% block title %}Restaurant{% endblock %}</title>
-   <link rel="stylesheet" href="{% static 'css/styles.css'  %}">
-   <style>
-      .breadcrumb{
-        font-size:14px;
-        margin:15px 0;
-        padding:8px 12px;
-        background:#f9f9f9;
-        border-radius:5px;
-      }
-      .breadcrumb a{
-        text-decoration:none;
-        color:#007bff;
-      }
-      .breadcrumb a:hover{
-        text-decoration: underline;
-      }
-      .breadcrumb span{
-        color:#555;
-      }
-    </style>
-</head>
-<body>
-    <div class="container">
-      {% block breadcrumb %}{% endblock %}
-      {% block content %}{% endblock %}
-    </div>
-</body>
-</html>
+
 
 {% extends 'base.html' %}
 {% block title %}Home{% endblock %}
@@ -42,6 +9,25 @@
 {% endblock %}
 
 {% block content %}
-<h1>welcome to our Restaurant</h1>
-<p>explore our menu, history, and more</p>
+   <div class="welcome-section">
+     <h1>welcome to our Restaurant</h1>
+     <p class="tagline">"where flavour meets tradition -serving happiness on every plate."</p>
+   </div>
+   <p>explore our menu, history, and more</p>
 {% endblock %}
+
+.welcome-section{
+    text-align:center;
+    margin:40px 0;
+}
+.welcome-section h1{
+    font-size:2.5rem;
+    color:#333;
+    margin-bottom:10px;
+}
+.welcome-section .tagline{
+    font-size:1.2rem;
+    color:#666;
+    font-style: italic;
+}
+

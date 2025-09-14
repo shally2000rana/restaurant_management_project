@@ -1,41 +1,47 @@
-from django.shortcuts import render
-
-def faq_view(request):
-    faqs=[
-        {"question":"what are your opening hours?", "answer":"we are open from 9AM to 10PM every day."},
-        {"question":"Do you offer home delivery?", "answer":"Yes, we offer free home delivery within 5 km."},
-        {"question":"How can i contact you?", "answer":"You can call us at (123) 456-7890 or email info@restaurant.com."},
-    ]
-
-    return render(request,"faq.html", {"faqs": faqs})
-
+<!--base.html-->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>FAQs</title>
+   <meta charset="UTF-8">
+   <title>{% block title %}Restaurant{% endblock %}</title>
+   <link rel="stylesheet" href="{% static 'css/styles.css'  %}">
+   <style>
+      .breadcrumb{
+        font-size:14px;
+        margin:15px 0;
+        padding:8px 12px;
+        background:#f9f9f9;
+        border-radius:5px;
+      }
+      .breadcrumb a{
+        text-decoration:none;
+        color:#007bff;
+      }
+      .breadcrumb a:hover{
+        text-decoration: underline;
+      }
+      .breadcrumb span{
+        color:#555;
+      }
+    </style>
 </head>
 <body>
-    <h1>Frequently Asked Questions</h1>
-
-    <ul>
-      {% for item in faqs %}
-        <li>
-          <strong>Q: {{item.question }}</strong>
-          A: {{item.answer}}
-        </li>
-      {% endfor %}
-    </ul>
-
-    <p><a href="{% url 'home' %}">Back to home </a></p>
+    <div class="container">
+      {% block breadcrumb %}{% endblock %}
+      {% block content %}{% endblock %}
+    </div>
 </body>
 </html>
 
-from django.urls import path
-from . import views
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block breadcrumbs %}
+<div class="breadcrumb">
+  <span>Home</span>
+</div>
+{% endblock %}
 
-urlpatterns=[
-    path('',views.home_view, name='home'),
-    path('faq/', views.faq.view, name='faq'),
-]
-<p><a href="{% url 'faq' %}">Visit our FAQ page</a></p>
-
+{% block content %}
+<h1>welcome to our Restaurant</h1>
+<p>explore our menu, history, and more</p>
+{% endblock %}

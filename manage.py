@@ -1,11 +1,8 @@
-RESTAURANT_PHONE="+91 98765 43210"
-from django.conf import settings
-from django.shortcuts import render
+from django.db import models
 
-def home(request):
-    return render(request, 'home.html', {'phone':settings.RESTAURANT_PHONE})
+class MenuCategory(models.Model):
+    name=models.CharField(max_length=100, unique=True)
 
-<div class="contact-info">
-   <strong>Call Us:</strong>{{phone}}
-</div>
+    def __str__(self):
+        return self.name
 

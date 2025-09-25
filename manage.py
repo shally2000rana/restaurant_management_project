@@ -1,13 +1,14 @@
-pip install djangorestframework
+from django.db import models
 
-INSTALLED_APPS=[
+class MenuItem(models.Model):
+  name=models.CharField(max_length=200)
+  description=models.TextField(blank=True, null=True)
+  price=models.DecimalField(max-max_digits=6, decimal_places=2)
 
-    'rest_framework',
-    'home',
-  ]
+  def__str__(self):
+    return self.name
+
 from rest_framework import serializers
-from .models import MenuCategory
-class MenuCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model=MenuCategory
-        fields=['id','name']
+from .models import MenuItem
+
+class MenuItemSerializer

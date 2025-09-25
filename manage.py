@@ -1,20 +1,26 @@
-from rest_framework.views import APIView
-from rest_framework.response import response
-from rest_framework import status
-from .models import MenuItems
-from .serializers import MenuItemsSerializer
+from django.db import models
+from django.contrib.auth.models import User
+class Order(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE, related_name='orders')
+    order_date=models.DateTimeField(auto_now_add=True)
+    total_price=models.DecimalField(max_digits=10, decimal_places=2)
 
-class MenuItemByCategory(APIView):
-    def get(self, request, *args, **kwargs):
-        """
-        An API endpointto retreive menu items
-        filtered by category.
-        """
-        category_name=request.query_params.get('category_name') 
-        if not category_name:
-            return Response({"error":"Category name parameter is required."}status=status.HTTP_400_BAD_REQUEST)
+    class OrderItem(models.Model):
+        order=models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+        product_name=models.CharField(max_length=255)
+        quantity=models.IntegerField()
+        price=models.DecimalField(max_digits=10, decimal_places=2)
 
-        menu_items=MenuItems.objects.filter(category_name=category_name)
+from rest_framework import serializers
+from .models import Order, OrderItem
 
-    MenuItemsSerializer(menu_items, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=OrderItem
+        fields=['product_name','quantity','price']
+class OrderSerializer(serializers.ModelSerializer):
+    items=OrderItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model=Order
+        fields=['id','order_date','total_price','items']

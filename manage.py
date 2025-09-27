@@ -1,9 +1,23 @@
-#in your models.py file(assuming a Django-like structure)
-class Restaurant(models.Model):
-    operaating_days=models.CharField(
-        max_length=50,
-        blank=True,
-        default=",
-        help_text="Comma-separated list of operating days"
-    )
+from djngo.db import models
+class ActiveOrderManager(models.Manager):
+    """
+    Manager that returns only orders with a 
+    status of 'pending' or 'processing'.
+    """
+    def get_active_orders(self):
+        """
+        Returns a QuerySet of active orders.
+        """
+        return self.get_queryset().filter(
+            status_in=['pending','processing']
+        )
+class Order(models.Model):
+    STATUS_CHOICES=[
+        ('pending','Pending'),
+        ('processing','Processing'),
+        ('shipped','Shipped'),
+        ('delivered','Delivered'),
+        ('cancelled','Cancelled'),
+    ]
+status=models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
 

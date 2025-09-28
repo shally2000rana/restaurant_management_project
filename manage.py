@@ -1,32 +1,29 @@
-import string
-import secrets
-from .models import Order
-def generate_unique_order_id(length=8);
-   """
-   Generate a unique alphanumeric ID for an order.
-   Uses the secrets module for cryptographic randomness.
-   """
-   chars=string.ascii_uppercase + string.digits
-
-   while True:
-    order_id=''join(secrets.choice(chars) for _ in range(length))
-    if not Order.objects.filter(order_id=order_id).exists():
-        return order_id
-
 from django.db import models
-from .utils import generate_unique_order_id
-class Order(models.Model):
-    order_id=models.CharField(
-        max_length=12, unique=True, editable=False
-    )
-    customer_name=models.CharField(max_length=100)
+class ContactFormSubmission(models.Model):
+    name=models.CharField(max_length=100)
+    email=models.EmailField()
+    message=models.TextField()
     created_at=models.DateTimeField(auto_now_add=True)
 
-    def save(self, *args, **kwargs):
-        if not self.order_id:
-            self.order_id=generate_unique_order_id()
-        super().save(*args, **kwargs)
     def __str__(self):
-        return f"Order {self.order_id} - {self.customer_name}"
+        return f"{self.name} - {self.email}"
+from rest_framework import serializers
+from .models import ContactFormSubmission
+class ContactFormSubmissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= ContactFormSubmission
+        fields=['id','name','email','message','created_at']
+from rest_framework import generics
+from .models import ContactFormSubmission
+from .serializers import ContactFormSubmissionSerializer
+
+class ContactFormSubmissionView(generics.CreateAPIView):
+    queryset=ContactFormSubmission.objects.all()
+    serializer_class=ContactFormSubmissionSerializer
+from django.urls import path
+from .views import ContactFormSubmissionView
+urlpatterns=[
+    path("contact/", ContactFormSubmissionView.as_view(). name="conatct-form"),
+]
         
 

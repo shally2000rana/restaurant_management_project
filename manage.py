@@ -1,58 +1,41 @@
 from django.db import models
-from django.contrib.auth.models import User
+from decimal import Decimal
+class MenuItem(models.Model):
+    name=models.CharField(max_length=100)
+    price=models.DecimalField(max_digits=10, decimal_places=2)
 
+    def __str__(self):
+        return self.name
 class Order(models.Model):
-    STATUS_CHOICES=[
-        ('Pending','Pending'),
-        ('Processing','Processing'),
-        ('Cancelled','Cancelled'),
-        ('Completed','Completed'),
-    ]
-    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
-    product=models.CharField(max_length=200)
-    status=models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     created_at=models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Order {self.id} - {self.status}"
+        return f"Order {self.id}"
+    def calculate_total(self):
+        total=Decimal('0.00')
+        for item in self.orderitem_set.all():
+            total+=item.price*item.quantity
+        return total
+class OrderItem(models.Model):
+    order=models.ForeignKey(Order, on_delete=models.CASCADE)
+    menu_item=models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    quantity=models.IntegerField()
+    price=models.DecimalField(max_digits=10, decimal_places=2)
 
-from rest_framework import serializers
-from .models import Order
+    def __str__(self):
+        return f"{self.quantity}x{self.menu_item.name}"
 
-class OrderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Order
-        fields=['id','user','product','status','created_at']
+def calculate_total(self):
+    total=Decimal('0.00')
+    for item in self.orderitem_set.all():
+        total+=item.price*item.quantity
+    return total
 
-from rest_framework import status, viewsets
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from .models import Order
-from .serializers import OrderSerializer
-
-class OrderViewSet(viewsets.ModelViewSet):
-    queryset=Order.objects.all()
-    serializer_class=OrderSerializer
-    @action(detail=True, methods=['delete'])
-    def cancel(self, request, pk=None):
-        try:
-            order=Order.objects.get(pk=pk, user=request.user)
-        except Order.DoesNotExist:
-            return Response({"error":"Order not found or not yours."}, status=status.HTTP_404_NOT_FOUND)
-        if order.status=='Cancelled':
-            return Response({"message":"Order already cancelled."}, status=status.HTTP_404_BAD_REQUEST)
-        if order.status=='Completed':
-            return Response({"message":"Completed orders cannot be cancelled."}, status=status.HTTP_404_BAD_REQUEST)
-        orders.status='Cancelled'
-        order.save()
-        return Response({"message":"Order cancelled successfully."}, status=status.HTTP_200_OK)
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import OrderViewSet
-
-router=DefaultRouter()
-router.register(r'orders', OrderViewSet, basename='order')
-
-urlpatterns=[
-    path('', include(router.urls)),
-]
+from django.test import TestCase
+from .models import Order, OrderItem, MenuItem
+from decimal import Decimal
+class OrderModelTest(TestCase):
+    def test_calculate_total(self):
+        order=Order.objects.create()
+        pizza=MenuItem.objects.create(name="Pizza", price=Decimal("12.50"))
+        burger=MenuItem.objects.create(name="Burger",price=Decimal("8.00"))

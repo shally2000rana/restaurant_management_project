@@ -1,60 +1,31 @@
-#orders/models.py
-from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
-class Coupon(models.Model):
-    #Coupon code, must be unique
-    code=models.CharField(
-        max_length=50,
-        unique=True,
-    )
-    #Discount percentage (e.g., 0.10 for 10% off)
-    discount_percentage=models.DecimalField(
-        max_digits=5,
-        decimal_places=2,
-        validators=[MinValueValidator(0),
-        MaxValueValidator(1)], #Ensure discount is between 0 and 1 (0% to 100%)
-        help_text='Discount as a percentage (e.g., 0.10 for 10% 0ff) '
-    )
-    #Status :True to enable, False to disable 
-    is_active=models.BooleanField(
-        default=True,
-        help_text='Indicates if the coupon is currently active'
-    )
-    #Validate period
-    valid_from = models.DateField(
-        help_text='Date from which the coupon is valid'
-    )
-    valid_until=models.DateField(
-        help_text='Date from which the coupon is valid(inclusive)'
-    )
-    #Impplement_str_method for better representation in the admin
-    def__str__(self):
-        return self.code
-
-    class Meta:
-        ordering=['-valid_from']
-        verbose_name='Coupon'
-        verbose_name_plural='Coupons'
-
-#orders/serializers.py
 from rest_framework import serializers
-class CouponValidationSerializer(serializers.Serializer):
-    code=serializers.CharField(max_length=50)
+#Assuming your Table model is in the 'home' app
+from .models import Table
+class TableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Table
+        #include the fields required by the prompt
+        fields=['id','table_number', 'capacity', 'is_available']
 
-#orders/views.py
-from rest_framework.views import APIView
-from rest_framework.response import response
-from rest_framework import Status
-from .models import Coupon
-from .serializers import CouponValidationSerializer
-from datetime import date
-class CouponValidationSerializer(APIView):
-    """
-    API endpoint to validate a coupon code.
-    Expects a POST request with {'code':'YOURCODE'} in the body.
-    """
-    def post(self, request, *args, **kwargs):
-        #use the serializer to validate the incoming data
-        serializer=CouponValidationSerializer(
-            data=request.dta
-        )
+from rest_framework import generics
+from .models import Table
+from .serializers import TableSerializer
+class AvailableTablesAPIView(generics.ListAPIView):
+    #Specify the serializer to use for the response data
+    serializer_class=TableSerializer
+    def get_queryset(self):
+        """
+        Returns the queryset of Table objects, filtered
+        to include only those where is_available is True.
+        """
+        #The core requirement filtering the tables
+        return Table.objects.filter(is_available=True)
+        #you could also use a simple APIView or a function-based view, but ListAPIView is cleaner.
+from django.urls import path
+from .views import AvailableTablesAPIView
+urlpatterns=[
+    #Map the specified URL path to your view path
+    ('api/tables/available/',
+      AvailableTablesAPIView.as_view(),
+      name='available_tables_api').
+]

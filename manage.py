@@ -1,41 +1,60 @@
+#orders/models.py
 from django.db import models
-from decimal import Decimal
-class MenuItem(models.Model):
-    name=models.CharField(max_length=100)
-    price=models.DecimalField(max_digits=10, decimal_places=2)
+from django.core.validators import MinValueValidator, MaxValueValidator
+class Coupon(models.Model):
+    #Coupon code, must be unique
+    code=models.CharField(
+        max_length=50,
+        unique=True,
+    )
+    #Discount percentage (e.g., 0.10 for 10% off)
+    discount_percentage=models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        validators=[MinValueValidator(0),
+        MaxValueValidator(1)], #Ensure discount is between 0 and 1 (0% to 100%)
+        help_text='Discount as a percentage (e.g., 0.10 for 10% 0ff) '
+    )
+    #Status :True to enable, False to disable 
+    is_active=models.BooleanField(
+        default=True,
+        help_text='Indicates if the coupon is currently active'
+    )
+    #Validate period
+    valid_from = models.DateField(
+        help_text='Date from which the coupon is valid'
+    )
+    valid_until=models.DateField(
+        help_text='Date from which the coupon is valid(inclusive)'
+    )
+    #Impplement_str_method for better representation in the admin
+    def__str__(self):
+        return self.code
 
-    def __str__(self):
-        return self.name
-class Order(models.Model):
-    created_at=models.DateTimeField(auto_now_add=True)
+    class Meta:
+        ordering=['-valid_from']
+        verbose_name='Coupon'
+        verbose_name_plural='Coupons'
 
-    def __str__(self):
-        return f"Order {self.id}"
-    def calculate_total(self):
-        total=Decimal('0.00')
-        for item in self.orderitem_set.all():
-            total+=item.price*item.quantity
-        return total
-class OrderItem(models.Model):
-    order=models.ForeignKey(Order, on_delete=models.CASCADE)
-    menu_item=models.ForeignKey(MenuItem, on_delete=models.CASCADE)
-    quantity=models.IntegerField()
-    price=models.DecimalField(max_digits=10, decimal_places=2)
+#orders/serializers.py
+from rest_framework import serializers
+class CouponValidationSerializer(serializers.Serializer):
+    code=serializers.CharField(max_length=50)
 
-    def __str__(self):
-        return f"{self.quantity}x{self.menu_item.name}"
-
-def calculate_total(self):
-    total=Decimal('0.00')
-    for item in self.orderitem_set.all():
-        total+=item.price*item.quantity
-    return total
-
-from django.test import TestCase
-from .models import Order, OrderItem, MenuItem
-from decimal import Decimal
-class OrderModelTest(TestCase):
-    def test_calculate_total(self):
-        order=Order.objects.create()
-        pizza=MenuItem.objects.create(name="Pizza", price=Decimal("12.50"))
-        burger=MenuItem.objects.create(name="Burger",price=Decimal("8.00"))
+#orders/views.py
+from rest_framework.views import APIView
+from rest_framework.response import response
+from rest_framework import Status
+from .models import Coupon
+from .serializers import CouponValidationSerializer
+from datetime import date
+class CouponValidationSerializer(APIView):
+    """
+    API endpoint to validate a coupon code.
+    Expects a POST request with {'code':'YOURCODE'} in the body.
+    """
+    def post(self, request, *args, **kwargs):
+        #use the serializer to validate the incoming data
+        serializer=CouponValidationSerializer(
+            data=request.dta
+        )

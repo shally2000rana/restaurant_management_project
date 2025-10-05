@@ -1,31 +1,20 @@
-from rest_framework import serializers
-#Assuming your Table model is in the 'home' app
-from .models import Table
-class TableSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Table
-        #include the fields required by the prompt
-        fields=['id','table_number', 'capacity', 'is_available']
-
-from rest_framework import generics
-from .models import Table
-from .serializers import TableSerializer
-class AvailableTablesAPIView(generics.ListAPIView):
-    #Specify the serializer to use for the response data
-    serializer_class=TableSerializer
-    def get_queryset(self):
-        """
-        Returns the queryset of Table objects, filtered
-        to include only those where is_available is True.
-        """
-        #The core requirement filtering the tables
-        return Table.objects.filter(is_available=True)
-        #you could also use a simple APIView or a function-based view, but ListAPIView is cleaner.
-from django.urls import path
-from .views import AvailableTablesAPIView
-urlpatterns=[
-    #Map the specified URL path to your view path
-    ('api/tables/available/',
-      AvailableTablesAPIView.as_view(),
-      name='available_tables_api').
-]
+#orders/utils.py
+from datetime import datetime
+from django.db.models import Sum
+from .models import orders
+def get_daily_sales_total(date_obj.date)-> float:
+    """
+    Calculates the total sales for a specific date by summing up
+    the total price of all orders placed on that day.
+    Args: 
+      date_obj:A date object from Python's
+      datetime modele (e.g., datetime.date.today()).
+      Returns:
+        The calculated total sales (a float or Decimal )for the day.
+        Returns 0 if no orders are found.
+    """
+    orders_on_date=
+    Orders.objects.filter(created_a6t_date=date_obj)
+    total_sales=orders_on_date.aggragate(total_sum=Sum('total_price'))
+    return total_sales.get('total_sum') or 0.0
+     

@@ -1,28 +1,25 @@
-from django.dn import models
-class OrderManager(models.Manager):
+from django.db import models
+class MenuItem(models.Model):
+    name=models.CharField(max_length=100)
+    price=models.DecimalField(max_digits=5, decimal_places=2)
+    is_daily_special=models.BooleanField(default=False)
+    def __str__(self):
+        return self.name
+
+from rest_framework import serializers
+from .models import MenuItem
+class DailySpecialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=MenuItem
+        fields=['id','name','price','is_daily_special']
+
+from rest_framework import generics
+from .models import MenuItem
+from .serializers import DailySpecialSerializer
+class DailySpecialSerializer(generics.ListAPIView):
     """
-    custom manager for the order model to provide common querying
-    methods.
+    API view to list all menu items designated as daily specials.
     """
-    def all_pending(self):
-        """
-        Returns a queryset of all orders with a 'pending' status.
-        """
-        return self.filter(status='pending')
-    def by_status(self, status_name):
-        """
-        returns a queryset of all orders matching a given status
-        name.
-        """
-        return self.filter(status=status_name)
-class Order(models.Model):
-    STATUS_CHOICES=[
-        ('pending','PENDING'),
-        ('shipped','SHIPPED'),
-        ('delivered','DELIVERED'),
-        ('canceled','CANCELED'),
-    ]
-    order_data=models.DateTimeField(auto_now_add=True)
-    status=models.CharFIELD(max_length=10, choices=STATUS_CHOICES, default='pending')
-    cusyomer=models.ForeignKey('Customer', on_delete=models.CASCADE)
+    queryset=MenuItem.objects.filter(is_daily_special=True)
+    serializer_class=DailySpecialSerializer
          

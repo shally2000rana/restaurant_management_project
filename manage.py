@@ -1,25 +1,22 @@
 from django.db import models
-class MenuItem(models.Model):
-    name=models.CharField(max_length=100)
-    price=models.DecimalField(max_digits=5, decimal_places=2)
-    is_daily_special=models.BooleanField(default=False)
-    def __str__(self):
-        return self.name
-
-from rest_framework import serializers
-from .models import MenuItem
-class DailySpecialSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=MenuItem
-        fields=['id','name','price','is_daily_special']
-
-from rest_framework import generics
-from .models import MenuItem
-from .serializers import DailySpecialSerializer
-class DailySpecialSerializer(generics.ListAPIView):
-    """
-    API view to list all menu items designated as daily specials.
-    """
-    queryset=MenuItem.objects.filter(is_daily_special=True)
-    serializer_class=DailySpecialSerializer
+from .utils import calculate_discount 
+class Order(models.Model):
+    def calculate_total(self):
+        """
+        Calculate the total cost of the ordr by summing up the discounted
+        price of all items.
+        """
+        total=0
+        order_items=self.items.all()
+        if not order_items.exists():
+            return 0
+        for item in order_items:
+            original_price=item.price
+            discounted_price=calculate_discount(original_price, item.discounts)
+            total+=discounted_price
+            return round(total,2)
+class OrderItem(models.Model):
+    order=models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    price=models.DecimalField(max_digits=10, decimal_places=2)
+    discount=models.JSONField(default=dict)
          

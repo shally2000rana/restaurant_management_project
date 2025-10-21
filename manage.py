@@ -1,5 +1,5 @@
-from django.db import models
-from django.contrib.auth import get_user_model
-User=get_user_model() 
+from rest_framework import serializers
+from home.models import UserReview
+class UserReviewSerializer(serializers.ModelSerializer):
         
          

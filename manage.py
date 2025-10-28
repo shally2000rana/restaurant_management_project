@@ -1,11 +1,11 @@
-from django.contrib import admin
-from .models import Restaurant
+from django.db import models
+class MenuItem(models.Model):
+    name=models.CharField(max_length=100)
+    description=models.TextField(blank=True)
+    price=models.DecimalField(max_digits=6, decimal_places=2)
+    is_featured=models.BooleanField(default=False)
 
-@admin.register(Restaurant)
-class RestaurantAdmin(admin.ModelAdmin):
-    list_display=('name', 'address','phone_number','email','is_active')
-    search_fields=('name','address')
-    list_filter=('is_active',)
-    list_per_page=20
+    def __str__(self):
+        return self.name
         
          

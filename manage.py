@@ -1,12 +1,10 @@
-from datetime import datetime
-from your_app.models import DailyOperatingHours
+from django.db import models
 
-def get_today_operating_hours():
-    today=datetime.today().strftime('%A')
-    try:
-        hours=DailyOperatingHours.objects.get(day=today)
-        return (hours.open_time, hours.close_time)
-    except DailyOperatingHours.DoesNotExist:
-        return (None, None)
+class Restaurant(models.Model):
+    name=models.CharField(max_length=100)
+    address=models.TextField()
+    has_delivery=models.BooleanField(default=False)
+    def__str__(self):
+        return self.name
         
          

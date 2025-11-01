@@ -1,10 +1,12 @@
 from django.db import models
 
-class Restaurant(models.Model):
-    name=models.CharField(max_length=100)
-    address=models.TextField()
-    has_delivery=models.BooleanField(default=False)
+class NutritionalInformation(models.Model):
+    menu_item=models.ForeignKey('MenuItem', on_delete=models.CASCADE)
+    calories=models.IntegerField()
+    protein_grams=models.DecimalField(max_digits=5, decimal_places=2)
+    fat_grams=models.DecimalField(max_digits=5, decimal_places=2)
+    carbohydrate_grams=models.DecimalField(max_digits=5, decimal_places=2)
     def__str__(self):
-        return self.name
+        return f"{self.menu_item.name} - {self.calories} kcal"
         
          

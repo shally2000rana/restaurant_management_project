@@ -1,17 +1,22 @@
-import re
+from django.contrib import admin
+from .models import Order
 
-def validate_phone_number(phone_number):
-    """
-    Validate a phone number format.
-    Accepts 10-12 digits, may include optional spaces, hypens,
-    or a country code prefix(like '+1')
+def mark_orders_processed(modeladmin, request, queryset):
+    queryset.update(status='Processed')
+mark_orders_processed.short_description="Mark selected orders as Processed"
 
-    Returns:
-       True if the phone number matches a valid pattern, otherwise False.
-    """
-    pattern=r'^(\+?\d{1,3}[-]?)?\d{10,12}$'
-    cleaned_number=phone_number.strip()
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display=('id', 'customer_name', 'status', 'created_at')
+    actions=[mark_orders_processed]
 
-    return bool(re.match(pattern, cleaned_number))
+class Order(models.Model):
+    STATUS_CHOICES=[
+        ('Pending','Pending'),
+        ('Processed','Processed'),
+    ]
+    customer_name=models.CharField(max_length=100)
+    status=models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    created_at=models.DateTimeField(auto_now_add=True)
         
          

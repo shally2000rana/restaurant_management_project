@@ -1,12 +1,17 @@
-from django.db import models
+from rest_framework.test import APITestCase
+from home.models import Restaurant
 
-class LoyaltyProgram(models.Model):
-    name=models.CharField(max_length=50, unique=True)
-    points_required=models.IntegerField(unique=True)
-    discount_percentage=models.DecimalField(max_digits5, decimal_places=2)
+class RestaurantInfoAPITest(APITestCase):
+    def test_get_restaurant_info(self):
+        restaurant=Restaurant.objects.create(
+            name="Test Restaurant",
+            address="123 Test St"
+        )
+        response=self.client.get('/api/restaurant-info')
 
-    def __str__(self):
-        return f"{self.name} ({self.discount_percentage}% off)"
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['name'], restaurant.name)
+        self.assertEqual(response.data['address'], restaurant.address)
         
         
          

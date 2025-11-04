@@ -1,17 +1,18 @@
-from datetime import datetime
+from rest_framework import serializers
+from .models import PaymentMethod
 
-def format_datetime(dt):
-    """
-    Returns a formatted string for a given datetime object.
-    Example: 'January 1, 2023 at 10:30 AM'
-    If dt is None, returns an empty string.
-    """
-    if dt is None:
-        return ""
-    if not isinstance(dt, datetime):
-        return ""
+class PaymentMethodSerializer(serializers.ModelSerailizer):
+    class Meta:
+        model=PaymentMethod
+        fields='__all__'
 
-    return dt.strftime("%B %D, %Y at %I:%M:%p")
+from rest_framework import generics
+from .models import PaymentMethod
+from .serializers import PaymentMethodSerializer
+
+class PaymentMethodListView(generics.ListAPIView):
+    queryset=PaymentMethod.objects.filter(is_active=True)
+    serializer_class=PaymentMethodSerializer
 
         
         

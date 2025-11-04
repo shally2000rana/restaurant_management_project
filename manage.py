@@ -1,19 +1,13 @@
-from rest_framework import serializers
-from .models import PaymentMethod
-
-class PaymentMethodSerializer(serializers.ModelSerailizer):
-    class Meta:
-        model=PaymentMethod
-        fields='__all__'
-
-from rest_framework import generics
-from .models import PaymentMethod
-from .serializers import PaymentMethodSerializer
-
-class PaymentMethodListView(generics.ListAPIView):
-    queryset=PaymentMethod.objects.filter(is_active=True)
-    serializer_class=PaymentMethodSerializer
-
+home/utils.py
+from home.models import MenuItem, Cuisine
+def get_distinct_cuisnes():
+    """
+    Returns a list of unique cuisne names currently available
+    across all menu items.
+    """
+    rerurn list(
+        MenuItem.objects.values_list('cuisine__name', flat=True).distinct()
+    )
         
         
          

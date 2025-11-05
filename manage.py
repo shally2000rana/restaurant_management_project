@@ -1,12 +1,19 @@
 from django.db import models
 
-class PaymentMethod(models.Model):
-    name=models.CharField(max_length=50, unique=True)
+class MenuCategory(models.Model):
+    name=models.CharField(max_length=100, unique=True)
     decsription=models.TextField(blank=True, null=True)
-    is_active=models.BooleanField(default=True)
 
-    def__str__(self):
+    def __str__(self):
         return self.name
+
+from rest_framework import serializers
+from .models import MenuCategory
+
+class MenuCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=MenuCategory
+        fields='__all__'
         
         
          

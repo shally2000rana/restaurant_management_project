@@ -1,1 +1,1 @@
-def 
+from django.db import models

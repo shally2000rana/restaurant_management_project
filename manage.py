@@ -1,14 +1,13 @@
-from django.db import models
-from django.db.models import Q
-class Reservation(models.Model):
-    start=models.DateTimeField()
-    end=models.DateTimeField()
+class Restaurant(models.Model):
+    name=models.CharField(max_length=150)
+    address=models.TextField()
+    phone=models.CharField(max_length=20)
+    opening_hours=models.CharField(max_length=150) 
 
-    @classmethod
-    def find_available(cls, start, end):
-        conflicts=cls.objects.filter(
-            Q(start_lt=end) & Q(end__gt=start)
-        )
-        if conflicts.exists():
-            return False
-        return True       
+from rest_framework import serializers
+from .models import serializers
+
+class RestaurantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Restaurant
+        fields="__all__"
